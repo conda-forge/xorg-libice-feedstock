@@ -11,6 +11,10 @@ for f in config.guess config.sub ; do
     cp -p $PREFIX/share/util-macros/$f .
 done
 
+if [ -n "$VS_MAJOR" ] ; then
+    autoreconf --force --install
+fi
+
 export PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig:$PREFIX/share/pkgconfig
 configure_args=(
     --prefix=$PREFIX
