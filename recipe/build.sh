@@ -12,6 +12,8 @@ for f in config.guess config.sub ; do
 done
 
 if [ -n "$VS_MAJOR" ] ; then
+    export ACLOCAL=aclocal-1.15
+    export AUTOMAKE=automake-1.15
     autoreconf --force --install
 fi
 
