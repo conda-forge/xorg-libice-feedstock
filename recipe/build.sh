@@ -21,7 +21,7 @@ if [ -n "$VS_MAJOR" ] ; then
         --install
         -I "$PREFIX/share/aclocal"
         -I "$PREFIX/Library/usr/share/aclocal"
-        -I "$PREFIX/mingw-w$ARCH/share/aclocal"
+        -I "$PREFIX/Library/mingw-w$ARCH/share/aclocal"
     )
     autoreconf "${autoreconf_args[@]}"
 fi
