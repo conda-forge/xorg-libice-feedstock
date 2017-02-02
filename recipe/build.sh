@@ -20,8 +20,7 @@ if [ -n "$VS_MAJOR" ] ; then
         --force
         --install
         -I "$PREFIX/share/aclocal"
-        -I "$PREFIX/Library/usr/share/aclocal"
-        -I "$PREFIX/Library/mingw-w$ARCH/share/aclocal"
+        -I "/mingw-w64/share/aclocal" # note: this is correct for win32 also!
     )
     autoreconf "${autoreconf_args[@]}"
 fi
