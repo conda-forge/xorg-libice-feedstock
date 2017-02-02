@@ -12,9 +12,18 @@ for f in config.guess config.sub ; do
 done
 
 if [ -n "$VS_MAJOR" ] ; then
-    export ACLOCAL=aclocal-1.15
-    export AUTOMAKE=automake-1.15
-    autoreconf --force --install
+    # Need to regenerate configure scripts to properly detect msys2.
+    am_version=1.15 # keep sync'ed with meta.yaml
+    export ACLOCAL=aclocal-$am_version
+    export AUTOMAKE=automake-$am_version
+    autoreconf_args=(
+        --force
+        --install
+        -I "$PREFIX/share/aclocal"
+        -I "$PREFIX/Library/usr/share/aclocal"
+        -I "$PREFIX/mingw-w$ARCH/share/aclocal"
+    )
+    autoreconf "${autoreconf_args[@]}"
 fi
 
 export PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig:$PREFIX/share/pkgconfig
