@@ -46,6 +46,9 @@ make check
 
 rm -rf $PREFIX/share/doc/libICE
 
+# XXXX diagnostics
+ls -l $PREFIX/lib/
+
 # Prefer dynamic libraries to static, and dump libtool helper files
 for lib_ident in ICE; do
     rm -f $PREFIX/lib/lib${lib_ident}.la
