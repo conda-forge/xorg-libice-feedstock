@@ -3,6 +3,7 @@
 {% set name = "xorg-" ~ xorg_name %}
 {% set version = "1.0.9" %}
 {% set sha256 = "8f7032f2c1c64352b5423f6b48a8ebdc339cc63064af34d66a6c9aa79759e202" %}
+{% set am_version = "1.15" %} # keep synchronized with build.sh
 
 package:
   name: {{ name|lower }}
@@ -16,7 +17,7 @@ source:
     - time.patch
 
 build:
-  number: 1
+  number: 2
   detect_binary_files_with_prefix: true
   features:
     - vc9  # [win and py27]
@@ -25,6 +26,9 @@ build:
 
 requirements:
   build:
+    - m2-autoconf  # [win]
+    - m2-automake{{ am_version }}  # [win]
+    - m2-libtool  # [win]
     - m2w64-pkg-config  # [win]
     - m2w64-toolchain  # [win]
     - pkg-config  # [not win]
