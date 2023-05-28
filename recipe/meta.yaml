@@ -1,8 +1,8 @@
 {% set xorg_name = "libICE" %}
 {% set xorg_category = "lib" %}
 {% set name = "xorg-" ~ xorg_name %}
-{% set version = "1.0.10" %}
-{% set sha256 = "6f86dce12cf4bcaf5c37dddd8b1b64ed2ddf1ef7b218f22b9942595fb747c348" %}
+{% set version = "1.1.1" %}
+{% set sha256 = "03e77afaf72942c7ac02ccebb19034e6e20f456dcf8dddadfeb572aa5ad3e451" %}
 {% set am_version = "1.15" %} # keep synchronized with build.sh
 
 package:
@@ -10,8 +10,7 @@ package:
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.tar.bz2
-  url: https://www.x.org/releases/individual/{{ xorg_category }}/{{ xorg_name }}-{{ version }}.tar.bz2
+  url: https://www.x.org/releases/individual/{{ xorg_category }}/{{ xorg_name }}-{{ version }}.tar.xz
   sha256: {{ sha256 }}
   patches:
     - time.patch
@@ -19,6 +18,8 @@ source:
 build:
   number: 0
   detect_binary_files_with_prefix: true
+  run_exports:
+    - {{ pin_subpackage(name|lower) }}
 
 requirements:
   build:
@@ -43,7 +44,6 @@ requirements:
     - xorg-util-macros
     - xorg-xproto
     - xorg-xtrans
-  run:
 
 test:
   commands:
