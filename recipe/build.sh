@@ -20,12 +20,6 @@ else
     uprefix="$PREFIX"
 fi
 
-# Cf. https://github.com/conda-forge/staged-recipes/issues/673, we're in the
-# process of excising Libtool files from our packages. Existing ones can break
-# the build while this happens. We have "/." at the end of $uprefix to be safe
-# in case the variable is empty.
-find $uprefix/. -name '*.la' -delete
-
 # On Windows we need to regenerate the configure scripts.
 if [ -n "$CYGWIN_PREFIX" ] ; then
     am_version=1.15 # keep sync'ed with meta.yaml
@@ -41,7 +35,8 @@ if [ -n "$CYGWIN_PREFIX" ] ; then
 
     # And we need to add the search path that lets libtool find the
     # msys2 stub libraries for ws2_32.
-    platlibs=$(cd $(dirname $(gcc --print-prog-name=ld))/../lib && pwd -W)
+    platlibs=$(cd $(dirname $($CC --print-prog-name=ld))/../sysroot/usr/lib && pwd -W)
+    test -f $platlibs/libws2_32.a || { exit "error locating libws2_32" ; exit 1 ; }
     export LDFLAGS="$LDFLAGS -L$platlibs"
 else
     # for other platforms we just need to reconf to get the correct achitecture
