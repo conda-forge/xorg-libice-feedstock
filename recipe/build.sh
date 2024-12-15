@@ -1,7 +1,6 @@
 #! /bin/bash
-set -e
-set -x
-IFS=$' \t\n' # workaround for conda 4.2.13+toolchain bug
+
+set -xeo pipefail
 
 # Adopt a Unix-friendly path if we're on Windows (see bld.bat).
 [ -n "$PATH_OVERRIDE" ] && export PATH="$PATH_OVERRIDE"
@@ -22,7 +21,7 @@ fi
 
 # On Windows we need to regenerate the configure scripts.
 if [ -n "$CYGWIN_PREFIX" ] ; then
-    am_version=1.15 # keep sync'ed with meta.yaml
+    am_version=1.16 # keep sync'ed with meta.yaml
     export ACLOCAL=aclocal-$am_version
     export AUTOMAKE=automake-$am_version
     autoreconf_args=(
@@ -43,8 +42,8 @@ if [ -n "$CYGWIN_PREFIX" ] ; then
     export LDFLAGS="$LDFLAGS -L$platlibs"
 else
     # for other platforms we just need to reconf to get the correct achitecture
-    echo libtoolize
-    libtoolize
+    echo libtoolize --force
+    libtoolize --force
     echo aclocal -I $PREFIX/share/aclocal -I $BUILD_PREFIX/share/aclocal
     aclocal -I $PREFIX/share/aclocal -I $BUILD_PREFIX/share/aclocal
     echo autoconf
@@ -73,12 +72,9 @@ fi
 ./configure "${configure_args[@]}"
 make -j$CPU_COUNT
 make install
+
 if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || "${CROSSCOMPILING_EMULATOR}" != "" ]]; then
-make check
+    make check
 fi
 
 rm -rf $uprefix/share/doc/libICE
-
-# Remove any new Libtool files we may have installed. It is intended that
-# conda-build will eventually do this automatically.
-find $uprefix/. -name '*.la' -delete

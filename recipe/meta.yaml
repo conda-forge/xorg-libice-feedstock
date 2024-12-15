@@ -1,9 +1,9 @@
 {% set xorg_name = "libICE" %}
 {% set xorg_category = "lib" %}
 {% set name = "xorg-" ~ xorg_name %}
-{% set version = "1.1.1" %}
-{% set sha256 = "03e77afaf72942c7ac02ccebb19034e6e20f456dcf8dddadfeb572aa5ad3e451" %}
-{% set am_version = "1.15" %} # keep synchronized with build.sh
+{% set version = "1.1.2" %}
+{% set sha256 = "974e4ed414225eb3c716985df9709f4da8d22a67a2890066bc6dfc89ad298625" %}
+{% set am_version = "1.16" %} # keep synchronized with build.sh
 
 package:
   name: {{ name|lower }}
@@ -16,8 +16,7 @@ source:
     - time.patch
 
 build:
-  number: 1
-  detect_binary_files_with_prefix: true
+  number: 0
   run_exports:
     - {{ pin_subpackage(name|lower) }}
 
@@ -32,9 +31,9 @@ requirements:
     - m2-base                      # [win]
     - make                         # [unix]
     - m2-make                      # [win]
-    - {{ compiler('c') }}          # [unix]
+    - {{ compiler("c") }}          # [unix]
     - {{ stdlib("c") }}            # [unix]
-    - {{ compiler('m2w64_c') }}    # [win]
+    - {{ compiler("m2w64_c") }}    # [win]
     - {{ stdlib("m2w64_c") }}      # [win]
     - autoconf                     # [unix]
     - automake                     # [unix]
