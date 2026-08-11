@@ -1,4 +1,6 @@
 #! /bin/bash
+# Get an updated config.sub and config.guess
+cp $BUILD_PREFIX/share/gnuconfig/config.* .
 
 set -xeo pipefail
 
@@ -34,6 +36,10 @@ if [ -n "$CYGWIN_PREFIX" ] ; then
 
     # Asking for this leads to compile errors:
     export CONFIG_FLAGS="--disable-ipv6"
+
+    # GCC 15 diagnoses xorg-xtrans' Windows setsockopt argument as an error.
+    # Retain compatibility until xorg-xtrans carries the const-char cast.
+    export CFLAGS="$CFLAGS -Wno-error=incompatible-pointer-types"
 
     # And we need to add the search path that lets libtool find the
     # msys2 stub libraries for ws2_32.

@@ -1,0 +1,75 @@
+schema_version: 1
+
+context:
+  xorg_name: libICE
+  xorg_category: lib
+  version: "1.1.2"
+  am_version: "1.16"  # Keep synchronized with build.sh.
+
+package:
+  name: xorg-${{ xorg_name | lower }}
+  version: ${{ version }}
+
+source:
+  url: https://www.x.org/releases/individual/${{ xorg_category }}/${{ xorg_name }}-${{ version }}.tar.xz
+  sha256: 974e4ed414225eb3c716985df9709f4da8d22a67a2890066bc6dfc89ad298625
+  patches:
+    - time.patch
+
+build:
+  number: 0
+  script: build
+
+requirements:
+  build:
+    - if: win
+      then:
+        - m2-autoconf
+        - m2-automake${{ am_version }}
+        - m2-libtool
+        - m2-pkg-config
+        - m2-base
+        - m2-make
+        - ${{ compiler('m2w64_c') }}
+        - ${{ stdlib('m2w64_c') }}
+    - if: unix
+      then:
+        - pkg-config
+        - gnuconfig
+        - make
+        - ${{ compiler('c') }}
+        - ${{ stdlib('c') }}
+        - autoconf
+        - automake
+        - gettext
+        - libtool
+  host:
+    - xorg-xorgproto
+    - if: win
+      then: xorg-libx11
+    - xorg-util-macros
+    - xorg-xtrans
+  run_exports:
+    - ${{ pin_subpackage('xorg-libice', upper_bound='x') }}
+
+tests:
+  - package_contents:
+      lib:
+        - if: unix
+          then: ICE
+      files:
+        - if: win
+          then:
+            - Library/lib/libICE.dll.a
+            - Library/bin/msys-ICE-*.dll
+
+about:
+  homepage: https://www.x.org/
+  license: MIT
+  license_file: COPYING
+  summary: The X.org Inter-Client Exchange library.
+
+extra:
+  feedstock-name: xorg-libice
+  recipe-maintainers:
+    - pkgw
